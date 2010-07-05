@@ -1,6 +1,5 @@
-#!/usr/local/bin/ruby -w
+#!/usr/bin/env ruby -w
 
-require 'rubygems'
 require 'inline'
 
 ##
