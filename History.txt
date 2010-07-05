@@ -1,3 +1,11 @@
+=== 1.2.2 / 2010-07-04
+
+* 3 minor enhancements:
+  
+  * removed dependency on hoe, moved to vanilla gemspec file.
+  * removed rubygems require dependency, works better with bundler now.
+  * removed rakefile, it serves no purpose anymore.
+
 === 1.2.1 / 2009-08-14
 
 * 2 minor enhancements:
