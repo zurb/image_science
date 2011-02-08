@@ -1,7 +1,7 @@
 = ImageScience
 
 * http://seattlerb.rubyforge.org/ImageScience.html
-* http://rubyforge.org/projects/seattlerb
+* http://rubygems.org/gems/image_science
 
 == DESCRIPTION:
 

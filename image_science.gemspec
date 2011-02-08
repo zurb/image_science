@@ -1,21 +1,28 @@
 Gem::Specification.new do |s|
-  s.name      = 'image_science'
-  s.version   = '1.2.0'         # Keep version in sync with jammit.rb
-  s.date      = '2011-2-8'
+  # Release Specific Information
+  s.version = "1.2.2"
+  s.date = "2010-07-04"
 
-  s.require_paths     = ['lib']
+  # Gem Details
+  s.name = "image_science"
+  s.authors = ["Ryan Davis"]
+  s.summary = %q{ImageScience is a clean and happy Ruby library that generates thumbnails -- and kicks the living crap out of RMagick.}
+  s.description = %q{ImageScience is a clean and happy Ruby library that generates thumbnails -- and kicks the living crap out of RMagick. Oh, and it doesn't leak memory like a sieve. :) For more information including build steps, see http://seattlerb.rubyforge.org/}
+  s.homepage = "http://seattlerb.rubyforge.org/ImageScience.html"
+  s.email = "ryand-ruby@zenspider.com"
   
-  s.summary     = "ImageScience is a clean and happy Ruby library that generates thumbnails."
+  # Gem Files
+  s.files = %w(README.txt bench.rb History.txt)
+  s.files += Dir.glob("lib/*.*")
 
-  # s.has_rdoc          = true
-  # s.extra_rdoc_files  = ['README']
-  # s.rdoc_options      << '--title'    << 'Jammit' <<
-  #                        '--exclude'  << 'test' <<
-  #                        '--main'     << 'README' <<
-  #                        '--all'
-  # 
-  # s.add_dependency 'yui-compressor',    ['>= 0.9.1']
-  # s.add_dependency 'closure-compiler',  ['>= 0.1.0']
-  # 
-  # s.files = Dir['lib/**/*', 'bin/*', 'rails/*', 'jammit.gemspec', 'LICENSE', 'README']
+  # Bin Files
+  s.bindir = "bin"
+  s.executables << "image_science_thumb"
+
+  # Gem Bookkeeping
+  s.has_rdoc = false
+  s.require_paths = ["lib"]
+  s.rubygems_version = %q{1.3.6}
+  s.add_dependency("RubyInline", [">= 3.8.4"])
+  s.add_development_dependency("minitest", [">= 1.6.0"])
 end
