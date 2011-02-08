@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name      = 'image_science'
-  s.version   = '2.3.0'         # Keep version in sync with jammit.rb
+  s.version   = '1.2.0'         # Keep version in sync with jammit.rb
   s.date      = '2011-2-8'
 
   s.require_paths     = ['lib']
