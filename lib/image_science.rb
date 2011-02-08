@@ -47,6 +47,11 @@ class ImageScience
   # convert the file type to the appropriate format.
 
   def save(path); end
+  
+  ##
+  # Same as save but takes jpeg_quality as required param
+
+  def save_jpeg(path, jpeg_quality); end
 
   ##
   # Resizes the image to +width+ and +height+ using a cubic-bspline
@@ -276,6 +281,29 @@ class ImageScience
         if ((fif != FIF_UNKNOWN) && FreeImage_FIFSupportsWriting(fif)) {
           GET_BITMAP(bitmap);
           flags = fif == FIF_JPEG ? JPEG_QUALITYSUPERB : 0;
+          BOOL result = 0, unload = 0;
+
+          if (fif == FIF_PNG) FreeImage_DestroyICCProfile(bitmap);
+          if (fif == FIF_JPEG && FreeImage_GetBPP(bitmap) != 24)
+            bitmap = FreeImage_ConvertTo24Bits(bitmap), unload = 1; // sue me
+
+          result = FreeImage_Save(fif, bitmap, output, flags);
+
+          if (unload) FreeImage_Unload(bitmap);
+
+          return result ? Qtrue : Qfalse;
+        }
+        rb_raise(rb_eTypeError, "Unknown file format");
+      }
+    END
+    
+    builder.c <<-"END"
+      VALUE save_jpeg(char * output, int quality) {
+        FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(output);
+        if (fif == FIF_UNKNOWN) fif = FIX2INT(rb_iv_get(self, "@file_type"));
+        if ((fif != FIF_UNKNOWN) && FreeImage_FIFSupportsWriting(fif)) {
+          GET_BITMAP(bitmap);
+          int flags = fif == FIF_JPEG ? quality : 0;
           BOOL result = 0, unload = 0;
 
           if (fif == FIF_PNG) FreeImage_DestroyICCProfile(bitmap);
