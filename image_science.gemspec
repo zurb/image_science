@@ -4,6 +4,8 @@ Gem::Specification.new do |s|
   s.date      = '2011-2-8'
 
   s.require_paths     = ['lib']
+  
+  s.summary     = "ImageScience is a clean and happy Ruby library that generates thumbnails."
 
   # s.has_rdoc          = true
   # s.extra_rdoc_files  = ['README']
