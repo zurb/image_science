@@ -26,6 +26,12 @@ class ImageScience
   end
 
   ##
+  # Replace the background transparency with white
+
+  def self.composite_with_white(data)
+  end
+
+  ##
   # Crops an image to +left+, +top+, +right+, and +bottom+ and then
   # yields the new image.
 
@@ -162,7 +168,7 @@ class ImageScience
           int flags = fif == FIF_JPEG ? JPEG_ACCURATE : 0;
           if (bitmap = FreeImage_Load(fif, input, flags)) {
             FITAG *tagValue = NULL;
-            FreeImage_GetMetadata(FIMD_EXIF_MAIN, bitmap, "Orientation", &tagValue); 
+            FreeImage_GetMetadata(FIMD_EXIF_MAIN, bitmap, "Orientation", &tagValue);
             switch (tagValue == NULL ? 0 : *((short *) FreeImage_GetTagValue(tagValue))) {
               case 6:
                 bitmap = FreeImage_RotateClassic(bitmap, 270);
@@ -207,6 +213,38 @@ class ImageScience
         VALUE result = Qnil;
         int flags = fif == FIF_JPEG ? JPEG_ACCURATE : 0;
         bitmap = FreeImage_LoadFromMemory(fif, stream, flags);
+        FreeImage_CloseMemory(stream);
+        if (bitmap) {
+          result = wrap_and_yield(bitmap, self, fif);
+        }
+        return result;
+      }
+    END
+
+    builder.c_singleton <<-"END"
+      VALUE composite_with_white(VALUE image_data) {
+        FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
+
+        Check_Type(image_data, T_STRING);
+        BYTE *image_data_ptr    = (BYTE*)RSTRING_PTR(image_data);
+        DWORD image_data_length = RSTRING_LEN(image_data);
+        FIMEMORY *stream = FreeImage_OpenMemory(image_data_ptr, image_data_length);
+
+        if (NULL == stream) {
+          rb_raise(rb_eTypeError, "Unable to open image_data");
+        }
+
+        fif = FreeImage_GetFileTypeFromMemory(stream, 0);
+        if ((fif == FIF_UNKNOWN) || !FreeImage_FIFSupportsReading(fif)) {
+          rb_raise(rb_eTypeError, "Unknown file format");
+        }
+
+        FIBITMAP *bitmap = NULL;
+        RGBQUAD appColor = { 255, 255, 255, 0 };
+        VALUE result = Qnil;
+        int flags = fif == FIF_JPEG ? JPEG_ACCURATE : 0;
+        FIBITMAP *rawshit = FreeImage_LoadFromMemory(fif, stream, flags);
+        bitmap = FreeImage_Composite(rawshit, FALSE, &appColor, NULL);
         FreeImage_CloseMemory(stream);
         if (bitmap) {
           result = wrap_and_yield(bitmap, self, fif);
@@ -281,7 +319,7 @@ class ImageScience
         rb_raise(rb_eTypeError, "Unknown file format");
       }
     END
-    
+
     builder.c <<-"END"
       VALUE save_jpeg(char * output, int quality) {
         FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(output);
@@ -304,6 +342,6 @@ class ImageScience
         rb_raise(rb_eTypeError, "Unknown file format");
       }
     END
-    
+
   end
 end

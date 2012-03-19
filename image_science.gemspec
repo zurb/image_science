@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   # Release Specific Information
-  s.version = "1.2.2"
+  s.version = "1.2.3"
   s.date = "2010-07-04"
 
   # Gem Details
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = %q{ImageScience is a clean and happy Ruby library that generates thumbnails -- and kicks the living crap out of RMagick. Oh, and it doesn't leak memory like a sieve. :) For more information including build steps, see http://seattlerb.rubyforge.org/}
   s.homepage = "http://seattlerb.rubyforge.org/ImageScience.html"
   s.email = "ryand-ruby@zenspider.com"
-  
+
   # Gem Files
   s.files = %w(README.txt bench.rb History.txt)
   s.files += Dir.glob("lib/*.*")
