@@ -244,7 +244,11 @@ class ImageScience
         VALUE result = Qnil;
         int flags = fif == FIF_JPEG ? JPEG_ACCURATE : 0;
         FIBITMAP *rawshit = FreeImage_LoadFromMemory(fif, stream, flags);
-        bitmap = FreeImage_Composite(rawshit, FALSE, &appColor, NULL);
+        if (FreeImage_IsTransparent(rawshit)) {
+          bitmap = FreeImage_Composite(rawshit, FALSE, &appColor, NULL);
+        } else {
+          bitmap = rawshit;
+        }
         FreeImage_CloseMemory(stream);
         if (bitmap) {
           result = wrap_and_yield(bitmap, self, fif);
