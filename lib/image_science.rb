@@ -240,14 +240,19 @@ class ImageScience
         }
 
         FIBITMAP *bitmap = NULL;
-        RGBQUAD appColor = { 255, 255, 255, 0 };
+        FIBITMAP *standard = NULL;
+        FIBITMAP *raw = NULL;
+        RGBQUAD white = { 255, 255, 255, 0 };
         VALUE result = Qnil;
         int flags = fif == FIF_JPEG ? JPEG_ACCURATE : 0;
-        FIBITMAP *rawshit = FreeImage_LoadFromMemory(fif, stream, flags);
-        if (FreeImage_IsTransparent(rawshit)) {
-          bitmap = FreeImage_Composite(rawshit, FALSE, &appColor, NULL);
+        raw = FreeImage_LoadFromMemory(fif, stream, flags);
+        standard = FreeImage_ConvertToType(raw, FIT_BITMAP, TRUE);
+        FreeImage_SetTransparent(standard, TRUE);
+        BOOL isTransparent = FreeImage_IsTransparent(standard);
+        if (isTransparent == TRUE) {
+          bitmap = FreeImage_Composite(raw, FALSE, &white, NULL);
         } else {
-          bitmap = rawshit;
+          bitmap = raw;
         }
         FreeImage_CloseMemory(stream);
         if (bitmap) {
