@@ -249,7 +249,7 @@ class ImageScience
         standard = FreeImage_ConvertToType(raw, FIT_BITMAP, TRUE);
         FreeImage_SetTransparent(standard, TRUE);
         BOOL isTransparent = FreeImage_IsTransparent(standard);
-        if (isTransparent == TRUE) {
+        if (isTransparent == TRUE && fif == FIF_PNG) {
           bitmap = FreeImage_Composite(raw, FALSE, &white, NULL);
         } else {
           bitmap = raw;
